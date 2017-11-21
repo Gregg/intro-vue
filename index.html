@@ -13,7 +13,22 @@
       </nav>
 
       <product-display :image="product.image" :title="product.title" :desc="product.desc" :price="product.price" :stocked="product.stocked"></product-display>
-      <tabs />
+      
+      <section class="section">
+        <tabs>
+            <tab name="Reviews" :selected="true">
+              <p>Here are the reviews</p>
+            </tab>
+            <tab name="Details">
+              <p>Brand: {{ product.details.brand }}</p>
+              <p>Material: {{ product.details.material }}</p>
+              <p>Shipping: {{ product.details.shipping }}</p>
+              
+            </tab>
+          </tabs>
+      </section>
+
+
     </div>
     
     <script src="https://unpkg.com/vue"></script>
