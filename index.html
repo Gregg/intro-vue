@@ -12,7 +12,7 @@
         <h1 class="title" style="color: white; padding: 10px;">Vuezon</h1>            
       </nav>
 
-      <product-display :image="product.image" :title="product.title" :desc="product.desc" :price="product.price" :stocked="product.stocked"></product-display>
+      <product-display :image="product.image" :title="product.title" :desc="product.desc" :price="product.price" :stocked="product.stocked" :variants="product.variants" @update-image="updateImage"></product-display>
       
       <section class="section">
         <tabs>
@@ -23,7 +23,6 @@
               <p>Brand: {{ product.details.brand }}</p>
               <p>Material: {{ product.details.material }}</p>
               <p>Shipping: {{ product.details.shipping }}</p>
-              
             </tab>
           </tabs>
       </section>

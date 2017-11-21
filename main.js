@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////PRODUCT-DISPLAY//
 
 Vue.component('product-display', {
-  props: ['title', 'desc','price', 'stocked', 'image'],
+  props: ['title', 'desc','price', 'stocked', 'image', 'variants'],
   template: `
     <div class="container" style="padding-top: 30px;">
       <div class="columns">
@@ -20,16 +20,26 @@ Vue.component('product-display', {
           <p>Price: {{ price }}</p>
           <p v-if="stocked">In Stock</p>
           <p v-else="stocked">Out of Stock</p>
-          <div style="border: 1px solid black; width: 30%;">
+          <hr>
+          <div>
             <p>Color Options:</p>
-            <div style="background-color: red; width: 40px; height: 30px; margin: 5px;"></div>
-            <div style="background-color: blue; width: 40px; height: 30px; margin: 5px;"></div>
-          
-          </div>
+
+            <ul >
+              <li v-for="variant in variants">
+                <div :style="{ backgroundColor: variant.color }" style="width: 40px; height: 40px; margin: 10px;" v-on:mouseover="updateImage(variant.image)"></div>
+              </li>
+            </ul>
+  
+            </div>
         </div>
       </div>
     </div>
-  `
+  `,
+  methods: {
+    updateImage(image) {
+      this.$emit('update-image', image)
+    }
+  }
 })
 
 ////////////////////////////////////////////////////////PRODUCT-TABS//
@@ -112,11 +122,13 @@ var app = new Vue({
           id: 234,
           color: "Red",
           quantity: 5,
-          image: ""
+          image: "https://s3.amazonaws.com/images.gearjunkie.com/uploads/2015/09/stormy-kromer-flannel.png"
         },
         {
           id: 235,
-          color: "Blue"
+          color: "Blue",
+          quantity: 3,
+          image: "https://i5.walmartimages.com/asr/56135c24-a32d-4765-b528-2f7480e4fb8d_1.b112247c8a6b575c89b9749f7b118462.jpeg"
         }
       ],
       details: {
@@ -124,6 +136,11 @@ var app = new Vue({
         material: 'organic cotton',
         shipping: 3.99
       }
+    }
+  },
+  methods: {
+    updateImage(url) {
+      this.product.image = url
     }
   }
 })
