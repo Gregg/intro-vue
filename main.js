@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////PRODUCT-DISPLAY//
+//////////////////////////////////////////////////PRODUCT-DISPLAY//
 
 Vue.component('product-display', {
   props: ['title', 'desc','price', 'stocked', 'image', 'variants'],
@@ -24,8 +24,8 @@ Vue.component('product-display', {
           <div>
             <p>Color Options:</p>
 
-            <ul >
-              <li v-for="variant in variants">
+            <ul>
+              <li v-for="variant in variants" :key="variant.id">
                 <div :style="{ backgroundColor: variant.color }" style="width: 40px; height: 40px; margin: 10px;" v-on:mouseover="updateImage(variant.image)"></div>
               </li>
             </ul>
@@ -42,7 +42,7 @@ Vue.component('product-display', {
   }
 })
 
-////////////////////////////////////////////////////////PRODUCT-TABS//
+//////////////////////////////////////////////////////////////TABS//
 
 Vue.component('tabs', {
   template: `
@@ -77,7 +77,7 @@ Vue.component('tabs', {
   }
 })
 
-////////////////////////////////////////////////////////PRODUCT-TAB//
+////////////////////////////////////////////////////////////TAB//
 
 Vue.component('tab', {
   template: `
@@ -88,9 +88,6 @@ Vue.component('tab', {
   props: { 
     name: { required: true },
     selected: { default: false }
-    // brand: String,
-    // material: String,
-    // shipping: Number
   },
   data() {
     return {
@@ -102,14 +99,76 @@ Vue.component('tab', {
   }
 })
 
+////////////////////////////////////////////////////////////REVIEWS//
 
-///////////////////////////////////////////////////////////INSTANCE//
+Vue.component('reviews', {
+  props: ['reviews'],
+  template: `
+  <div>
+    <div v-for="review in reviews" style="padding-bottom: 20px;" :key="review.id">
+      <span>Rating: {{ review.rating }}</span>
+      <p>{{ review.date }}</p>            
+      <p>{{ review.text }}</p>
+      <p>by {{ review.author }}</p>
+    </div>
+  </div>
+  `
+})
+
+////////////////////////////////////////////////////////////REVIEW-FORM//
+
+Vue.component('review-form', {
+  template: `
+  <div>
+    <h1>Leave a review:</h1>
+
+    <div class="field">
+     <input class="input" type="text" placeholder="Your Name" v-model="name">      
+    </div>
+
+    <div class="field">    
+     <textarea class="textarea" placeholder="Review" v-model="text"></textarea>
+    </div>
+
+    <div class="field">        
+      <div class="select">
+        <select v-model="rating">
+          <option>Rating</option>
+          <option>5</option>
+          <option>4</option>
+          <option>3</option>
+          <option>2</option>
+          <option>1</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="control">
+      <button class="button is-info" @click="submitReview">Submit</button>
+    </div>
+
+  </div>
+  `,
+  data() {
+    return {
+      name: "",
+      text: "",
+      rating: ""
+    }
+  },
+  methods: {
+    submitReview() {
+      this.$emit('submit-review', this.data)      
+    }
+  }
+})
+
+////////////////////////////////////////////////////////////ROOT//
 
 var app = new Vue({
   el: '#app',
   data: {
     tagline: "The Best Store",
-    nombre: 'Adam',
     product: {
       id: 1,
       title: 'Flannel Shirt',
@@ -117,6 +176,7 @@ var app = new Vue({
       price: 25.00,
       image: "https://s3.amazonaws.com/images.gearjunkie.com/uploads/2015/09/stormy-kromer-flannel.png",
       stocked: true,
+      rating: 5,
       variants: [
         {
           id: 234,
@@ -135,12 +195,38 @@ var app = new Vue({
         brand: 'Vuetiful',
         material: 'organic cotton',
         shipping: 3.99
-      }
+      },
+      reviews: [ 
+        {
+          id: 12,
+          productId: 1,
+          date: "Nov 21, 2017",
+          author: "Mary Cohlman",
+          text: "I love this item. Great quality. Just what I needed!"
+        },
+        {
+          id: 13,
+          productId: 1,
+          date: "Nov 1, 2017",
+          author: "Al Ghettin",
+          text: "Pretty nice. Color was a bit darker than expected but good overall."
+        },
+        {
+          id: 14,
+          productId: 1,
+          date: "Oct 11, 2017",
+          author: "Denny Hondly",
+          text: "Don't even think about buying this."
+        }
+      ]
     }
   },
   methods: {
     updateImage(url) {
       this.product.image = url
+    },
+    submitReview(data) {
+      this.product.reviews.push(data)
     }
   }
 })
